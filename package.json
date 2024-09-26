@@ -1,0 +1,19 @@
+{
+  "name": "rag-poc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/query-data.mjs",
+    "process-data": "node ./src/process-data.mjs",
+    "embed-data": "node ./src/embed-data.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "html-to-text": "^9.0.5",
+    "openai": "^4.64.0"
+  }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "kA0ao000000oI8DCAU",
+    "type": "Article",
+    "summary": "Graffiti Removal",
+    "content": "<p><span dir=\"ltr\">The Department of Public Works (DPW) provides free graffiti removal services using &quot;blast&quot; trucks for </span><span dir=\"ltr\">mineral surfaces and paint trucks for surfaces like metal or wood. They also strive to promptly remove </span><span dir=\"ltr\">any new graffiti if a cleaned building is tagged again. Residents can report graffiti by submitting a </span><span dir=\"ltr\">&quot;Graffiti Removal Request&quot;.</span></p>\n<p><br><span dir=\"ltr\">If you provide an email or cell phone number you will be provided with a tracking number that will allow </span><span dir=\"ltr\">you to check the status of your service request and receive updates if available. Be sure to include the </span><span dir=\"ltr\">exact location of the graffiti, whether it&#39;s on public or private property, and the surface type that needs </span><span dir=\"ltr\">cleaning.</span></p>\n<p><br><span dir=\"ltr\">The City relies on community groups, block clubs, chambers of commerce, and individual residents to </span><span dir=\"ltr\">report graffiti and request removal. DPW collaborates with the Police Department to apprehend graffiti </span><span dir=\"ltr\">vandals and holds parents or guardians liable for damages caused by minors in their household. By </span><span dir=\"ltr\">reporting graffiti and taking preventative measures, such as painting over graffiti-prone locations, </span><span dir=\"ltr\">installing motion-sensor lighting, and planting thorny shrubs, we can work together to make our city an </span><span dir=\"ltr\">even more beautiful city</span></p>"
+  },
+  {
+    "id": "kA0ao000000oHyXCAU",
+    "type": "Article",
+    "summary": "Missed Pickup (Trash, Recycling, Yard Waste)",
+    "content": "If you're a resident of the City and your garbage wasn't collected, you can report a Missed Pick-Up Request.\n\n\nBe sure to indicate whether only your garbage pickup was missed or if the entire alley was missed. When you provide your email or cell phone number, you'll receive a tracking number that will allow you to check the status of your service request and receive updates if available.\n\n\nIf you're unsure of your garbage and/or recycling pickup schedules, you can call 311."
+  },
+  {
+    "id": "kA0ao000000oI09CA",
+    "type": "Article",
+    "summary": "Street Light Out",
+    "content": "\"Street Light Out Complaints\" are tracked by the Department of Transportation to discover and monitor outage trends.\n\n\nIf you provide an email or cell phone number you will be provided with a tracking number that will allow you to check the status of your service request and receive updates if available.\n\n\nIf you are experiencing entire blocks of street lights that are consistently having issues, you may contact your local Councilor’s office for other City sponsored capital improvement programs.\n\n\nFor more information call 311."
+  },
+  {
+    "id": "a0Lao0000087WEfEAM",
+    "type": "Request",
+    "summary": "Graffiti. Report graffiti issues within the city."
+  },
+  {
+    "id": "a0Lao0000088xMjEAI",
+    "type": "Request",
+    "summary": "Missed Trash Pickup. Report bulk missed collection, bulk trash items placed out too early or any issue regarding bulk pick up. (Residents shall not place uncontained items at curb or alley more than ten (10) days prior to the scheduled collection week)"
+  },
+  {
+    "id": "a0Lao0000088xMoEAI",
+    "type": "Request",
+    "summary": "Burned-Out Streetlight. The light bulb of the street light is not working."
+  }
+]
