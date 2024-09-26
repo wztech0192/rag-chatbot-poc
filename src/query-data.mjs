@@ -144,13 +144,6 @@ async function queryData(query) {
           summary: d.summary,
           chunk: d.chunk,
         })),
-        allRetrievedDocs: allRetrievedDocs.map((d) => ({
-          id: d.id,
-          type: d.type,
-          similarity: d.similarity,
-          summary: d.summary,
-          chunk: d.chunk,
-        })),
       },
       null,
       2
