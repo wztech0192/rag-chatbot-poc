@@ -97,19 +97,21 @@ async function queryData(query) {
     })
     .join("\n\n");
 
+  const instructions = [
+    "You are an expert assistant for a 311 system.",
+    "Answer questions strictly using content from retrieved documents.",
+    "For simple greetings, feel free to respond appropriately.",
+    "Do not provide information not explicitly found in the documents.",
+    "For unrelated questions (excluding greetings), inform the user that the information is unavailable.",
+    "Include unique document references at the end of responses in this format as list: `$$<TYPE>_<ID>_<SUMMARY>$$`.",
+    "If applicable, mention the Request type as well.",
+  ];
+
   const result = await chatbotClient.chat.completions.create({
     messages: [
       {
         role: "system",
-        content: `
-          You are an expert assistant for a 311 system. 
-          You should answer questions using only the provided content from the retrieved documents. 
-          However, if the user asks simple, common questions such as greetings (e.g., "Hello", "How are you?"), feel free to respond appropriately.
-          Do not make up or provide any information that is not explicitly found in the retrieved documents.
-          If the user asks a question unrelated to the content of the retrieved documents and it is not a greeting, politely inform them that the information is not available.
-          When generating your response, ensure that each unique document you reference is included at the end of the response as a list. Each reference should follow this format: \`$$<TYPE>_<ID>_<SUMMARY>$$\`. 
-          When there is a Request type, also mention the Request.
-        `,
+        content: instructions.join(" "),
       },
       {
         role: "system",
