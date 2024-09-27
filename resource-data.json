@@ -1,5 +1,83 @@
 [
   {
+    "id": "a0Lao0000088xMmEAI",
+    "type": "Request",
+    "summary": "Barking Dog or Loud Animal Complaint",
+    "content": "code compliance will send out a courtesy letter on the first barking dog complaint. should the nuisance persist, you may file a barking dog petition."
+  },
+  {
+    "id": "a0Lao0000088xMoEAI",
+    "type": "Request",
+    "summary": "Burned-Out Streetlight",
+    "content": "the light bulb of the street light is not working."
+  },
+  {
+    "id": "a0Lao0000088xMrEAI",
+    "type": "Request",
+    "summary": "Container Left Out",
+    "content": "report recycling or trash containers that are left out after collection."
+  },
+  {
+    "id": "a0Lao0000088xMlEAI",
+    "type": "Request",
+    "summary": "Downed Tree or Limb",
+    "content": "report a downed tree or limb."
+  },
+  {
+    "id": "a0Lao0000087WEfEAM",
+    "type": "Request",
+    "summary": "Graffiti",
+    "content": "report graffiti on private property, report graffiti at any of our city parks., report graffiti on public property, report graffiti issues within the city."
+  },
+  {
+    "id": "a0Lao0000088xMtEAI",
+    "type": "Request",
+    "summary": "Lost Pet",
+    "content": "repost a lost pet."
+  },
+  {
+    "id": "a0Lao0000088xMjEAI",
+    "type": "Request",
+    "summary": "Missed Trash Pickup",
+    "content": "report bulk missed collection, bulk trash items placed out too early or any issue regarding bulk pick up. (residents shall not place uncontained items at curb or alley more than ten (10) days prior to the scheduled collection week)"
+  },
+  {
+    "id": "a0Lao0000088xMnEAI",
+    "type": "Request",
+    "summary": "New Tree Request",
+    "content": "use this request type for a new tree to be planted on public property.  any requests on private property are the responsibility of the property owner."
+  },
+  {
+    "id": "a0Lao0000088xMiEAI",
+    "type": "Request",
+    "summary": "Pothole",
+    "content": "report a pothole on the street."
+  },
+  {
+    "id": "a0Lao0000088xMqEAI",
+    "type": "Request",
+    "summary": "Rental Housing Interior Complaint",
+    "content": "report residential rental code violations that landlords have failed to fix such as: a/c not working, water issues, infestations, etc."
+  },
+  {
+    "id": "a0Lao0000088xMsEAI",
+    "type": "Request",
+    "summary": "Residential Code Complaint",
+    "content": "report residential code violations such as: weeds in yard, deteriorating pools, lawn parking etc. report street parking issues directly to non-emergency police department."
+  },
+  {
+    "id": "a0Lao0000088xMpEAI",
+    "type": "Request",
+    "summary": "Traffic Signal Repair",
+    "content": "report a damaged traffic signal."
+  },
+  {
+    "id": "a0Lao0000088xMkEAI",
+    "type": "Request",
+    "summary": "Tree Pruning",
+    "content": "use this request type to report a tree that needs pruning or maintenance. note tree must be on public property for the city to take action on."
+  },
+  {
     "id": "kA0ao000000oI8DCAU",
     "type": "Article",
     "summary": "Graffiti Removal",
@@ -9,27 +87,36 @@
     "id": "kA0ao000000oHyXCAU",
     "type": "Article",
     "summary": "Missed Pickup (Trash, Recycling, Yard Waste)",
-    "content": "If you're a resident of the City and your garbage wasn't collected, you can report a Missed Pick-Up Request.\n\n\nBe sure to indicate whether only your garbage pickup was missed or if the entire alley was missed. When you provide your email or cell phone number, you'll receive a tracking number that will allow you to check the status of your service request and receive updates if available.\n\n\nIf you're unsure of your garbage and/or recycling pickup schedules, you can call 311."
+    "content": "<p><span dir=\"ltr\">If you&#39;re a resident of the City and your garbage wasn&#39;t collected, you can report a Missed Pick-Up </span><span dir=\"ltr\">Request.</span></p>\n<p><br><span dir=\"ltr\">Be sure to indicate whether only your garbage pickup was missed or if the entire alley was missed. </span><span dir=\"ltr\">When you provide your email or cell phone number, you&#39;ll receive a tracking number that will allow you </span><span dir=\"ltr\">to check the status of your service request and receive updates if available.</span></p>\n<p><br><span dir=\"ltr\">If you&#39;re unsure of your garbage and/or recycling pickup schedules, you can call 311.</span></p>"
   },
   {
-    "id": "kA0ao000000oI09CA",
+    "id": "kA0ao000000oI6bCAE",
+    "type": "Article",
+    "summary": "Potholes Repair",
+    "content": "<div>\n<div><strong><span dir=\"ltr\">What is a pothole?</span></strong></div>\n<div><span dir=\"ltr\">Potholes are typically irregularly shaped pavement holes which are formed when cracks </span><span dir=\"ltr\">in roadway pavement surfaces allow water to seep under the pavement during winter </span><span dir=\"ltr\">freeze and thaw weather cycles. As subsurface water freezes, it causes an expansion in </span><span dir=\"ltr\">the surface crack, creating what we see as potholes. Potholes are normally irregular in </span><span dir=\"ltr\">shape and size and tend to be relatively shallow holes, with the base of the roadway still </span><span dir=\"ltr\">observable.</span></div>\n<div><br><strong><span dir=\"ltr\">What is a cave-in?</span></strong><br><span dir=\"ltr\">Cave-ins can occur when underground utility services are damaged. They are usually </span><span dir=\"ltr\">found near a manhole or catch basin. Cave-ins, sometimes called sinkholes, can range </span><span dir=\"ltr\">from a slight dip in the pavement surface to a deep hole that requires immediate </span><span dir=\"ltr\">attention. If the hole appears to be a potential pavement cave-in you can submit a </span><span dir=\"ltr\">request for a Pavement Cave-In Inspection via 311.</span></div>\n<div><br><strong><span dir=\"ltr\">Who fixes potholes and cave-ins?</span></strong><br><span dir=\"ltr\">When a cave-in or sinkhole is reported, Transportation inspectors will assess the </span><span dir=\"ltr\">degree of damage and determine what caused the problem. It will then forward its </span><span dir=\"ltr\">assessment to the agency or utility company that needs to make the repairs. </span><span dir=\"ltr\">Depending on what caused the cave-in, underground work may need to be completed </span><span dir=\"ltr\">before pavement repairs are made.</span><br><span dir=\"ltr\"></span></div>\n<div> </div>\n<div><span dir=\"ltr\">Department of Transportation has inspectors in neighborhoods across the city and </span><span dir=\"ltr\">construction crews assigned to repair potholes throughout the year. The months of </span><span dir=\"ltr\">December through April is when the city typically sees the highest number of potholes, </span><span dir=\"ltr\">Department of Transportation schedules crews to work every day, including weekends </span><span dir=\"ltr\">during ‘pothole season’. However, crews work throughout the spring, summer, and fall </span><span dir=\"ltr\">as well.</span></div>\n<div><br><span dir=\"ltr\">Department of Transportation uses several techniques that enable the department to fill </span><span dir=\"ltr\">hundreds of thousands of potholes each year.</span><br><span dir=\"ltr\">•</span><span dir=\"ltr\"> </span><span dir=\"ltr\">Computerized mapping and tracking of potholes reported to the City’s 311 system</span><br><span dir=\"ltr\">•</span><span dir=\"ltr\"> </span><span dir=\"ltr\">Seven-day-a-week deployment of pothole repair crews during the winter months, </span><span dir=\"ltr\">including weekend crews and an overnight crew</span><br><span dir=\"ltr\">•</span><span dir=\"ltr\"> </span><span dir=\"ltr\">The use of high-performance cold-patch asphalt material for pothole repairs during </span><span dir=\"ltr\">the winter months and hot mix asphalt in spring, summer, and fall.</span>\n<div> </div>\n</div>\n</div>\n<div>\n<div><span dir=\"ltr\">To report problems with utility excavations in an alley or street, please submit a Street </span><span dir=\"ltr\">Cut Complaint.</span></div>\n</div>"
+  },
+  {
+    "id": "kA0ao000000oI09CAE",
     "type": "Article",
     "summary": "Street Light Out",
-    "content": "\"Street Light Out Complaints\" are tracked by the Department of Transportation to discover and monitor outage trends.\n\n\nIf you provide an email or cell phone number you will be provided with a tracking number that will allow you to check the status of your service request and receive updates if available.\n\n\nIf you are experiencing entire blocks of street lights that are consistently having issues, you may contact your local Councilor’s office for other City sponsored capital improvement programs.\n\n\nFor more information call 311."
+    "content": "<p><span dir=\"ltr\">&quot;Street Light Out Complaints&quot; are tracked by the Department of Transportation to </span><span dir=\"ltr\">discover and monitor outage trends.</span></p>\n<p><br><span dir=\"ltr\">If you provide an email or cell phone number you will be provided with a tracking </span><span dir=\"ltr\">number that will allow you to check the status of your service request and receive </span><span dir=\"ltr\">updates if available.</span></p>\n<p><br><span dir=\"ltr\">If you are experiencing entire blocks of street lights that are consistently having issues, </span><span dir=\"ltr\">you may contact your local Councilor’s office for other City sponsored capital </span><span dir=\"ltr\">improvement programs.</span></p>\n<p><br><span dir=\"ltr\">For more information call 311.</span></p>"
   },
   {
-    "id": "a0Lao0000087WEfEAM",
-    "type": "Request",
-    "summary": "Graffiti. Report graffiti issues within the city."
+    "id": "kA0ao000000oHqTCAU",
+    "type": "Article",
+    "summary": "Tree Planting",
+    "content": "<h4 style=\"box-sizing: border-box;margin: 10px 0px;padding: 0px;font-weight: 600;font-size: 21.6px;display: block;margin-inline: 0px;line-height: 1.1;margin-block: 1.33em;white-space: normal;font-family: Montserrat, sans-serif;color: rgb(205, 74, 8);text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\">Want to donate a tree? </span></h4>\n<p style=\"box-sizing: border-box;margin: 0px 0px 1em;padding: 0px;white-space: normal;color: rgb(56, 56, 56);font-family: Montserrat, sans-serif;font-size: 18px;text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\">Please contact Urban Forester, Richard Adkins. Phone: 480-350-5227 or email: <a style=\"box-sizing: border-box;color: rgb(21, 98, 165);text-decoration-line: underline;transition: color 0.1s linear 0s;cursor: pointer;\" href=\"mailto:richard_adkins@tempe.gov\" target=\"_blank\">richard_adkins@tempe.gov</a></span></p>\n<h4 style=\"box-sizing: border-box;margin: 10px 0px;padding: 0px;font-weight: 600;font-size: 21.6px;display: block;margin-inline: 0px;line-height: 1.1;margin-block: 1.33em;white-space: normal;font-family: Montserrat, sans-serif;color: rgb(205, 74, 8);text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\">Want to plant a tree? </span></h4>\n<p style=\"box-sizing: border-box;margin: 0px 0px 1em;padding: 0px;white-space: normal;color: rgb(56, 56, 56);font-family: Montserrat, sans-serif;font-size: 18px;text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\"><a style=\"box-sizing: border-box;color: rgb(21, 98, 165);text-decoration-line: underline;transition: color 0.1s linear 0s;cursor: pointer;\" href=\"https://www.tempe.gov/government/community-services/parks/tempe-trees\" target=\"_blank\">Tempe Trees cost-match program</a></span></p>\n<p style=\"box-sizing: border-box;margin: 0px 0px 1em;padding: 0px;white-space: normal;color: rgb(56, 56, 56);font-family: Montserrat, sans-serif;font-size: 18px;text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\"><a style=\"box-sizing: border-box;color: rgb(21, 98, 165);text-decoration-line: underline;transition: color 0.1s linear 0s;cursor: pointer;\" href=\"https://www.tempe.gov/government/public-works/water/water-conservation/rebates/treebate\" target=\"_blank\">Tempe&#39;s New Treebate Program</a></span></p>\n<p style=\"box-sizing: border-box;margin: 0px 0px 1em;padding: 0px;white-space: normal;color: rgb(56, 56, 56);font-family: Montserrat, sans-serif;font-size: 18px;text-align: left;background-color: rgb(255, 255, 255);\"><span style=\"box-sizing: border-box;font-family: arial, helvetica, sans-serif;\"><a style=\"box-sizing: border-box;color: rgb(21, 98, 165);text-decoration-line: underline;transition: color 0.1s linear 0s;cursor: pointer;\" href=\"https://www.tempe.gov/government/public-works/water/water-conservation/rebates/treebate\" target=\"_blank\"> </a><a style=\"box-sizing: border-box;color: rgb(21, 98, 165);text-decoration-line: underline;transition: color 0.1s linear 0s;cursor: pointer;\" target=\"_blank\" href=\"https://www.srpnet.com/energy-savings-rebates/home/shade-tree-workshop\">SRP tree planting workshops</a></span></p>"
   },
   {
-    "id": "a0Lao0000088xMjEAI",
-    "type": "Request",
-    "summary": "Missed Trash Pickup. Report bulk missed collection, bulk trash items placed out too early or any issue regarding bulk pick up. (Residents shall not place uncontained items at curb or alley more than ten (10) days prior to the scheduled collection week)"
+    "id": "kA0ao000000oHwvCAE",
+    "type": "Article",
+    "summary": "Tree Pruning",
+    "content": "<p><span dir=\"ltr\">City residents can submit a &quot;Tree Pruning/Maintenance” request for Parks Department to trim trees, </span><span dir=\"ltr\">pick up branches or other larger landscaping waste (on Public property only).</span></p>\n<p><br><span dir=\"ltr\">When you provide an email or cell phone number, you&#39;ll receive a tracking number that enables you to </span><span dir=\"ltr\">check the status of your service request and receive updates if available. Additional information </span><span dir=\"ltr\">regarding the approximate size of the tree/debris and its location will be required.</span></p>\n<p><br><span dir=\"ltr\">Response times may vary as the Park Department’s specialized equipment is also used to address tree </span><span dir=\"ltr\">emergencies, often caused by storms and resulting in debris blocking the public way.</span></p>\n<p> </p>\n<p><strong><span dir=\"ltr\">Note for Tree Emergency Issues</span></strong></p>\n<p><span dir=\"ltr\">If you encounter a tree emergency, such as a fallen or hanging tree limb that is blocking the public way or obstructing traffic control measures please call 311 immediately. Note: this Service Request type is not available via the 311 app, or the 311 web portal.</span></p>\n<p><span dir=\"ltr\"><br>If you provide an email or cell phone number you will be provided with a tracking number that will allow you to check the status of your service request and receive updates if available.</span></p>\n<p><span dir=\"ltr\"><br>The Parks Department will quickly dispatch an inspector and/or tree trimming crew. The City’s response times can vary based on the severity of the emergency and weather conditions. The City works hard to maintain the tree population and respond to all tree-related issues as quickly and efficiently as possible.</span></p>\n<p><span dir=\"ltr\"><br>For more information or questions please call 311.</span></p>"
   },
   {
-    "id": "a0Lao0000088xMoEAI",
-    "type": "Request",
-    "summary": "Burned-Out Streetlight. The light bulb of the street light is not working."
+    "id": "kA0ao000000omSrCAI",
+    "type": "Article",
+    "summary": "“Tech City” Privacy Policy",
+    "content": "<p><strong>Introduction</strong><br>This Privacy Policy describes how “Tech City” (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) collects, uses, and discloses your personal information when you use our website (<a href=\"https://catconsult.com/)\" target=\"_blank\">https://catconsult.com/)</a> (the &quot;Service&quot;) and the choices you have associated with that data.</p>\n<p><br><strong>Information We Collect</strong></p>\n<p>We collect several different types of information for various purposes to improve our service to you.</p>\n<p><span style=\"text-decoration: underline;\">Personal Information</span></p>\n<p>When you use the Service, you may provide us with certain personally identifiable information that can be used to contact or identify you (&quot;Personal Information&quot;). Personal Information may include, but is not limited to:</p>\n<ul><li>Name</li><li>Email address</li><li>Phone number (optional)</li><li>Billing address (if applicable)</li></ul>\n<p><span style=\"text-decoration: underline;\">Non-Personal Information</span></p>\n<p>We also collect non-personal information that does not directly identify you. This may include information such as:</p>\n<ul><li>Browser type and version</li><li>Operating system</li><li>Referring URL</li><li>Length of visit to pages</li><li>IP address</li></ul>\n<p> </p>\n<p><strong>How We Use Your Information</strong><br>We use the information we collect for various purposes, including:</p>\n<ul><li>To provide and maintain the Service</li><li>To improve and personalize the Service</li><li>To send you marketing and promotional communications (with your<br>consent)</li><li>To respond to your inquiries and requests</li><li>To analyze how you use the Service</li></ul>\n<p><strong>Disclosure of Your Information</strong><br>We may disclose your information to third-party vendors and service providers who help us operate and improve the Service. These third parties are obligated to keep your information confidential and use it only for the purposes we have disclosed.</p>\n<p><br>We may also disclose your information if required by law or to protect the rights, property, or safety of ourselves or others.</p>\n<p><br><strong>Your Choices</strong><br>You have several choices regarding your information:</p>\n<ul><li>You can opt out of receiving marketing and promotional communications from us by following the unsubscribe instructions in those communications.</li><li>You can access and update your personal information through your account  settings.</li></ul>\n<p> </p>\n<p><strong>Data Security</strong><br>We take reasonable steps to protect your information from unauthorized access, disclosure, alteration, or destruction. However, no internet transmission or electronic storage method is 100% secure.</p>\n<p> </p>\n<p><strong>Changes to this Privacy Policy</strong><br>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>\n<p><br><strong>Contact Us</strong><br>If you have any questions about this Privacy Policy, please contact us:</p>\n<ul><li>By email: [connect@catconsult.com]</li></ul>\n<p>By visiting this page on our website: [<a href=\"https://catconsult.com/contact-us/\" target=\"_blank\">https://catconsult.com/contact-us/</a>]</p>\n<p> </p>\n<p><strong>Disclaimer</strong><br>This is a basic template and may not be suitable for all businesses. You may want to consult with a lawyer to ensure your privacy policy complies with all applicable laws and regulations.</p>"
   }
 ]

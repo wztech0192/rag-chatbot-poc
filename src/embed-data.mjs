@@ -12,7 +12,7 @@ import chark from "chalk";
 async function embedData() {
   console.log(chark.green("Embedding process started..."));
 
-  const processedData = loadJSON(PROCESSED_DATA_PATH);
+  const processedData = await loadJSON(PROCESSED_DATA_PATH);
 
   if (!processedData) {
     console.log(

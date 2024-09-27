@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/query-data.mjs",
+    "fetch-data": "node ./src/fetch-data.mjs",
     "process-data": "node ./src/process-data.mjs",
     "embed-data": "node ./src/embed-data.mjs"
   },

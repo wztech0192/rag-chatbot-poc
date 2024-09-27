@@ -12,7 +12,7 @@ import {
   SIMILARITY_THRESHOLD,
 } from "./utils.mjs";
 
-const embeddedData = loadJSON(EMBEDDED_DATA_PATH);
+const embeddedData = await loadJSON(EMBEDDED_DATA_PATH);
 
 // Create an interface for reading input from the console
 const rl = readline.createInterface({
@@ -100,10 +100,10 @@ async function queryData(query) {
   const instructions = [
     "You are an expert assistant for a 311 system.",
     "Answer questions strictly using content from retrieved documents.",
+    "Do not provide information or suggestion not explicitly found in the retrieved documents.",
     "For simple greetings, feel free to respond appropriately.",
-    "Do not provide information not explicitly found in the documents.",
-    "For unrelated questions (excluding greetings), inform the user that the information is unavailable.",
-    "Include unique document references at the end of responses in this format as list: `$$<TYPE>_<ID>_<SUMMARY>$$`.",
+    "For unrelated questions, inform the user that the information is unavailable.",
+    "Include retrieved document references at the end of responses in this format as list: `$$<TYPE>_<ID>_<SUMMARY>$$`.",
     "If applicable, mention the Request type as well.",
   ];
 
@@ -115,9 +115,10 @@ async function queryData(query) {
       },
       {
         role: "system",
-        content: `Retrieved Documents:\n${retrievedDocsContent}`,
+        content: retrievedDocsContent
+          ? `Retrieved Documents:\n${retrievedDocsContent}`
+          : `No retrieved documents. Do not provide any reference or information. Do not mention retrieved documents.`,
       },
-
       {
         role: "user",
         content: query,

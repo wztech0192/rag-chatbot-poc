@@ -8,7 +8,7 @@ import {
 import { htmlToText } from "html-to-text";
 
 async function processData() {
-  const resourceData = loadJSON(RESOURCE_DATA_PATH);
+  const resourceData = await loadJSON(RESOURCE_DATA_PATH);
 
   if (!resourceData) {
     console.log(
@@ -30,11 +30,6 @@ async function processData() {
       embeddingChunks: [],
       rawChunks: [],
     };
-
-    if (rss.summary) {
-      data.embeddingChunks.push(`${rss.type} title: ${rss.summary}`);
-      data.rawChunks.push(rss.summary);
-    }
 
     if (rss.content) {
       for (const chunk of chunkBySentencesAndCharacters(rss.content, 3, 200)) {
