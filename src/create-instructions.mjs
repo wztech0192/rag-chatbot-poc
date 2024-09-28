@@ -14,7 +14,7 @@ export function createInstructionMessages(retrievedDocsContent) {
         "If applicable, mention the Request type as well.",
         retrievedDocsContent
           ? `Retrieved Documents:\n${retrievedDocsContent}`
-          : `No retrieved documents. Do not provide any reference or information. Do not mention retrieved documents.`,
+          : `No retrieved documents. Inform the user that the information is unavailable.`,
       ].join(" "),
     },
     // Custom information
@@ -22,7 +22,7 @@ export function createInstructionMessages(retrievedDocsContent) {
       role: "system",
       content: [
         "You may also use the following information to answer question:",
-        "Catalyst Consulting Group (CCG) is locate in Chicago, IL.",
+        "Catalyst Consulting Group (CCG) company is based in Chicago, IL.",
         "Tech city is a 311 Demo project created by Catalyst Consulting Group",
       ].join(" "),
     },
