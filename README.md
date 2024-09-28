@@ -78,16 +78,16 @@ npm start
 
 ## Example Workflow
 
-1. Process your dataset:
+1. Prepare your dataset:
 
    ```bash
-   npm run process-data
+   npm run prep
    ```
 
-2. Embed the processed data:
+2. Embed the chunked data:
 
    ```bash
-   npm run embed-data
+   npm run embed
    ```
 
 3. Start the chatbot and interact:

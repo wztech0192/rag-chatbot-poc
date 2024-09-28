@@ -1,15 +1,8 @@
 import chark from "chalk";
-import {
-  loadJSON,
-  PROCESSED_DATA_PATH,
-  RESOURCE_DATA_PATH,
-  writeToFile,
-} from "./utils.mjs";
 import { htmlToText } from "html-to-text";
+import { createHash } from "crypto";
 
-async function processData() {
-  const resourceData = await loadJSON(RESOURCE_DATA_PATH);
-
+export async function chunkData(resourceData) {
   if (!resourceData) {
     console.log(
       chark.red("No resource data found. Please provide resource data first.")
@@ -17,36 +10,36 @@ async function processData() {
     return;
   }
 
-  console.log(chark.green("Processing data started..."));
+  console.log(chark.green("Chunking data started..."));
 
   const result = [];
 
-  for (const rss of resourceData) {
-    const data = {
-      id: rss.id,
-      type: rss.type,
-      summary: rss.summary,
-      content: rss.content,
-      embeddingChunks: [],
-      rawChunks: [],
-    };
+  for (const data of resourceData) {
+    if (!data.chunks) {
+      data.chunks = [];
 
-    if (rss.content) {
-      for (const chunk of chunkBySentencesAndCharacters(rss.content, 3, 200)) {
-        data.embeddingChunks.push(
-          `${rss.type} title: ${rss.summary}. ${chunk}`
-        );
-        data.rawChunks.push(chunk);
+      if (data.content) {
+        for (const chunk of chunkBySentencesAndCharacters(
+          data.content,
+          3,
+          200
+        )) {
+          data.chunks.push({
+            value: chunk,
+            hash: sha256inb64(data.id + chunk),
+          });
+        }
       }
+
+      console.log(chark.blue(`Chunked "${data.id}"...`));
     }
 
     result.push(data);
-
-    console.log(chark.blue(`Processed "${rss.id}"...`));
   }
 
-  writeToFile(PROCESSED_DATA_PATH, JSON.stringify(result, null, 2));
-  console.log(chark.green(`Processing data completed`));
+  console.log(chark.green(`Chunking data completed`));
+
+  return result;
 }
 
 // Function to convert HTML to plain text
@@ -92,4 +85,8 @@ function chunkBySentencesAndCharacters(rawText, maxSentences, maxCharacters) {
   return chunks;
 }
 
-await processData();
+function sha256inb64(value) {
+  const hash = createHash("sha256");
+  hash.update(value);
+  return hash.digest("base64");
+}

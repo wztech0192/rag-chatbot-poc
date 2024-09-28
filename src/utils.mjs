@@ -6,11 +6,11 @@ import { fileURLToPath } from "url";
 config();
 
 export const RESOURCE_DATA_PATH = "../resource-data.json";
-export const PROCESSED_DATA_PATH = "../storage/processed-data.json";
+export const CHUNKED_DATA_PATH = "../storage/chunked-data.json";
 export const EMBEDDED_DATA_PATH = "../storage/embedded-data.json";
 export const QUERY_RESULT_PATH = "../query-results/";
 export const EMBEDDING_MODEL = "text-embedding-3-small";
-export const SIMILARITY_THRESHOLD = 0.2;
+export const SIMILARITY_THRESHOLD = 0.25;
 export const RAG_MAX_RESULT = 5;
 export const RAG_MAX_REQUEST_RESULT = 3;
 
@@ -41,4 +41,12 @@ export const writeToFile = (filePath, data) => {
   fs.mkdirSync(directory, { recursive: true });
 
   fs.writeFileSync(filePath, data);
+};
+
+export const chunkArray = (array, chunkSize = 16) => {
+  let result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
 };
