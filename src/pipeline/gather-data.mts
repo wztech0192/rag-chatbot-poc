@@ -1,37 +1,51 @@
 import chark from "chalk";
+import { RagChunkedData, RagDocument } from "../types.mjs";
+import {
+  ARTICLE_DETAIL_PATH,
+  ARTICLE_METADATA_PATH,
+  REQUEST_METADATA_PATH,
+  SF_BASE_URL,
+} from "../config.mjs";
 
 const FETCH_ARTICLE_HEADERS = {
   lastmodifiedtimestamp: "2020-12-26T19:18:32.000Z",
   visibility: "public",
 };
 
-export async function fetchData(resourceData) {
-  console.log(chark.green("Fetching resource data started..."));
-
-  const resourceDataMap = resourceData.reduce((acc, r) => {
+export async function gatherData(
+  chunkedData: RagChunkedData
+): Promise<RagChunkedData> {
+  const existingDataMap = chunkedData.documents.reduce((acc, r) => {
     acc[r.id] = r;
     return acc;
-  }, {});
+  }, {} as Record<string, RagDocument>);
 
-  const articles = await fetchArticles(resourceDataMap);
+  console.log(chark.green("Gathering resource data started..."));
 
-  const requests = await fetchRequests(resourceDataMap);
+  const articles = await fetchArticles(existingDataMap);
 
-  const result = requests.concat(articles);
+  const requests = await fetchRequests(existingDataMap);
+
+  const documents = requests.concat(articles);
+
   console.log(
-    chark.green(`fetched ${result.length} resource data completed...`)
+    chark.green(`Gathered ${documents.length} resource data completed...`)
   );
 
-  return result;
+  return {
+    source: SF_BASE_URL,
+    timestamp: new Date().toISOString(),
+    documents,
+  };
 }
 
-async function fetchRequests(resourceDataMap) {
+async function fetchRequests(resourceDataMap: Record<string, RagDocument>) {
   console.log(chark.blue(`Fetching request metadata...`));
 
-  const res = await fetch(process.env.REQUEST_TYPE_URL);
+  const res = await fetch(new URL(REQUEST_METADATA_PATH, SF_BASE_URL));
   const requestTypes = (await res.json()).data;
 
-  const result = [];
+  const result: RagDocument[] = [];
 
   for (const rt of requestTypes) {
     const existingRt = resourceDataMap[rt.requestTypeId];
@@ -62,17 +76,17 @@ async function fetchRequests(resourceDataMap) {
   return result;
 }
 
-async function fetchArticles(resourceDataMap) {
+async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
   console.log(chark.blue(`Fetching article metadata...`));
 
-  const res = await fetch(process.env.ARTICLE_URL, {
+  const res = await fetch(new URL(ARTICLE_METADATA_PATH, SF_BASE_URL), {
     headers: FETCH_ARTICLE_HEADERS,
   });
 
   const articleTypes = (await res.json()).data;
   console.log(chark.blue(`Fetched ${articleTypes.length} article metadata...`));
 
-  const articleData = [];
+  const articleData: RagDocument[] = [];
 
   for (const articleType of articleTypes) {
     const existingArticleData = resourceDataMap[articleType.knowledgeArticleId];
@@ -85,8 +99,11 @@ async function fetchArticles(resourceDataMap) {
       articleData.push(existingArticleData);
     } else {
       // fetch content
+
       const articleDetailRes = await fetch(
-        `${process.env.ARTICLE_DETAIL_URL}/${articleType.knowledgeArticleId}`,
+        `${new URL(ARTICLE_DETAIL_PATH, SF_BASE_URL).toString()}/${
+          articleType.knowledgeArticleId
+        }`,
         {
           headers: FETCH_ARTICLE_HEADERS,
         }

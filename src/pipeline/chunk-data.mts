@@ -1,20 +1,16 @@
 import chark from "chalk";
 import { htmlToText } from "html-to-text";
-import { createHash } from "crypto";
+import { sha256inb64 } from "../utils.mjs";
+import { RagChunkedData, RagDocument } from "../types.mjs";
 
-export async function chunkData(resourceData) {
-  if (!resourceData) {
-    console.log(
-      chark.red("No resource data found. Please provide resource data first.")
-    );
-    return;
-  }
-
+export async function chunkData(
+  chunkedData: RagChunkedData
+): Promise<RagChunkedData> {
   console.log(chark.green("Chunking data started..."));
 
-  const result = [];
+  const result: RagDocument[] = [];
 
-  for (const data of resourceData) {
+  for (const data of chunkedData.documents) {
     if (!data.chunks) {
       data.chunks = [];
 
@@ -26,7 +22,7 @@ export async function chunkData(resourceData) {
         )) {
           data.chunks.push({
             value: chunk,
-            hash: sha256inb64(data.id + chunk),
+            hash: sha256inb64(data.id + data.summary + chunk),
           });
         }
       }
@@ -39,11 +35,14 @@ export async function chunkData(resourceData) {
 
   console.log(chark.green(`Chunking data completed`));
 
-  return result;
+  return {
+    ...chunkedData,
+    documents: result,
+  };
 }
 
 // Function to convert HTML to plain text
-function convertHtmlToPlainText(html) {
+function convertHtmlToPlainText(html: string) {
   return htmlToText(html, {
     wordwrap: false, // Prevent line wrapping
     preserveNewlines: false, // Strip any extra newlines
@@ -51,14 +50,18 @@ function convertHtmlToPlainText(html) {
 }
 
 // Function to chunk plain text by sentences with a max sentence and character limit
-function chunkBySentencesAndCharacters(rawText, maxSentences, maxCharacters) {
+function chunkBySentencesAndCharacters(
+  rawText: string,
+  maxSentences: number,
+  maxCharacters: number
+) {
   const text = convertHtmlToPlainText(rawText);
   const sentences = text.match(/[^\.!\?]+[\.!\?]+/g); // Split by sentence-ending punctuation
-  const chunks = [];
+  const chunks: string[] = [];
   let chunk = "";
   let sentenceCount = 0;
 
-  sentences.forEach((sentence) => {
+  sentences?.forEach((sentence) => {
     const trimmedSentence = sentence.trim();
 
     // Check if adding this sentence would exceed the sentence or character limits
@@ -83,10 +86,4 @@ function chunkBySentencesAndCharacters(rawText, maxSentences, maxCharacters) {
   }
 
   return chunks;
-}
-
-function sha256inb64(value) {
-  const hash = createHash("sha256");
-  hash.update(value);
-  return hash.digest("base64");
 }
