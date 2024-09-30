@@ -29,7 +29,9 @@ async function promptUser() {
         );
       } else {
         console.log(
-          chark.greenBright(`Bot:\n${result.choices[0].message.content}\n`)
+          chark.greenBright(
+            `Intelligent Assistant:\n${result.choices[0].message.content}\n`
+          )
         );
       }
       promptUser();

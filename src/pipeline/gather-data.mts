@@ -78,6 +78,7 @@ async function fetchRequests(resourceDataMap: Record<string, RagDocument>) {
 
 async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
   console.log(chark.blue(`Fetching article metadata...`));
+  const articleData: RagDocument[] = [];
 
   const res = await fetch(new URL(ARTICLE_METADATA_PATH, SF_BASE_URL), {
     headers: FETCH_ARTICLE_HEADERS,
@@ -86,42 +87,57 @@ async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
   const articleTypes = (await res.json()).data;
   console.log(chark.blue(`Fetched ${articleTypes.length} article metadata...`));
 
-  const articleData: RagDocument[] = [];
-
   for (const articleType of articleTypes) {
-    const existingArticleData = resourceDataMap[articleType.knowledgeArticleId];
+    try {
+      const existingArticleData =
+        resourceDataMap[articleType.knowledgeArticleId];
 
-    if (
-      existingArticleData &&
-      existingArticleData.updatedAt === articleType.lastModifiedDate
-    ) {
-      // reuse
-      articleData.push(existingArticleData);
-    } else {
-      // fetch content
+      if (
+        existingArticleData &&
+        existingArticleData.updatedAt === articleType.lastModifiedDate
+      ) {
+        // reuse
+        articleData.push(existingArticleData);
+      } else {
+        // fetch content
 
-      const articleDetailRes = await fetch(
-        `${new URL(ARTICLE_DETAIL_PATH, SF_BASE_URL).toString()}/${
-          articleType.knowledgeArticleId
-        }`,
-        {
-          headers: FETCH_ARTICLE_HEADERS,
+        const articleDetailRes = await fetch(
+          `${new URL(ARTICLE_DETAIL_PATH, SF_BASE_URL).toString()}/${
+            articleType.knowledgeArticleId
+          }`,
+          {
+            headers: FETCH_ARTICLE_HEADERS,
+          }
+        );
+
+        const articleDetail = await articleDetailRes.json();
+        if (!articleDetail?.data?.articleContent) {
+          throw new Error(
+            `Failed to fetch article ${articleType.knowledgeArticleId} content detail`
+          );
         }
-      );
 
-      const articleDetail = await articleDetailRes.json();
-
-      articleData.push({
-        id: articleType.knowledgeArticleId,
-        type: "Article",
-        summary: articleType.title,
-        content: articleDetail.data.articleContent || articleType.description,
-        updatedAt: articleType.lastModifiedDate,
-        keywords: articleType.keywords,
-        chunks: null,
-      });
+        articleData.push({
+          id: articleType.knowledgeArticleId,
+          type: "Article",
+          summary: articleType.title,
+          content: articleDetail.data.articleContent || articleType.description,
+          updatedAt: articleType.lastModifiedDate,
+          keywords: articleType.keywords,
+          chunks: null,
+        });
+        console.log(
+          chark.blue(
+            `Upsert ${articleType.knowledgeArticleId} article detail...`
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
       console.log(
-        chark.blue(`Upsert ${articleType.knowledgeArticleId} article detail...`)
+        chark.red(
+          `Failed to fetch article content ${articleType.knowledgeArticleId}`
+        )
       );
     }
   }

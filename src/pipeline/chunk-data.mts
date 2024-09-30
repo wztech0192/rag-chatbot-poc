@@ -15,11 +15,7 @@ export async function chunkData(
       data.chunks = [];
 
       if (data.content) {
-        for (const chunk of chunkBySentencesAndCharacters(
-          data.content,
-          3,
-          200
-        )) {
+        for (const chunk of chunkBySentencesAndCharacters(data.content)) {
           data.chunks.push({
             value: chunk,
             hash: sha256inb64(data.id + data.summary + chunk),
@@ -49,41 +45,68 @@ function convertHtmlToPlainText(html: string) {
   });
 }
 
-// Function to chunk plain text by sentences with a max sentence and character limit
 function chunkBySentencesAndCharacters(
   rawText: string,
-  maxSentences: number,
-  maxCharacters: number
-) {
-  const text = convertHtmlToPlainText(rawText);
-  const sentences = text.match(/[^\.!\?]+[\.!\?]+/g); // Split by sentence-ending punctuation
+  maxSentences = 2,
+  maxCharacters = 250,
+  minCharacters = 50
+): string[] {
+  const sentences = splitIntoSentences(convertHtmlToPlainText(rawText));
   const chunks: string[] = [];
-  let chunk = "";
-  let sentenceCount = 0;
+  let currentChunk = "";
+  let currentSentencesCount = 0;
+  let currentCharactersCount = 0;
 
-  sentences?.forEach((sentence) => {
-    const trimmedSentence = sentence.trim();
+  for (let i = 0; i < sentences.length; i++) {
+    const sentence = sentences[i];
+    const sentenceLength = sentence.length;
 
-    // Check if adding this sentence would exceed the sentence or character limits
     if (
-      sentenceCount + 1 > maxSentences ||
-      chunk.length + trimmedSentence.length > maxCharacters
+      (currentSentencesCount + 1 > maxSentences ||
+        currentCharactersCount + sentenceLength > maxCharacters) &&
+      currentCharactersCount >= minCharacters
     ) {
-      // If so, push the current chunk to the result and start a new chunk
-      chunks.push(chunk.trim());
-      chunk = ""; // Reset chunk
-      sentenceCount = 0; // Reset sentence count
+      chunks.push(currentChunk.trim());
+      currentChunk = "";
+      currentSentencesCount = 0;
+      currentCharactersCount = 0;
     }
 
-    // Add the sentence to the current chunk
-    chunk += `${trimmedSentence} `;
-    sentenceCount++;
-  });
+    currentChunk += sentence + " ";
+    currentSentencesCount++;
+    currentCharactersCount += sentenceLength;
+  }
 
-  // Push the last chunk if any content is left
-  if (chunk.length > 0) {
-    chunks.push(chunk.trim());
+  if (currentChunk.trim().length >= minCharacters) {
+    chunks.push(currentChunk.trim());
   }
 
   return chunks;
+}
+
+function splitIntoSentences(text: string): string[] {
+  // Regular expression to split text into sentences.
+  const sentenceEndings = /(?<=[.!?])\s+(?=[A-Z])/g;
+  let roughSentences = text.split(sentenceEndings);
+
+  // Adjust sentences to include ending punctuation within 10 characters.
+  for (let i = 1; i < roughSentences.length; i++) {
+    const prevSentence = roughSentences[i - 1];
+    const currentSentence = roughSentences[i];
+    const lookBehindLength = Math.min(10, currentSentence.length);
+    const lookBehindText = currentSentence.slice(0, lookBehindLength);
+
+    // Check if there's ending punctuation in the look-behind text.
+    const endingPunctuationIndex = lookBehindText.search(/[.!?]/);
+    if (endingPunctuationIndex !== -1) {
+      // Adjust the previous sentence.
+      roughSentences[i - 1] =
+        prevSentence + lookBehindText.slice(0, endingPunctuationIndex + 1);
+      // Adjust the current sentence.
+      roughSentences[i] = currentSentence.slice(endingPunctuationIndex + 1);
+    }
+  }
+
+  // Clean up any empty sentences after adjustment.
+  return roughSentences.filter((sentence) => sentence.trim().length > 0);
 }

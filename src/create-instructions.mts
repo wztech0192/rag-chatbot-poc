@@ -35,7 +35,7 @@ export function createInstructionMessages(
     {
       role: "system",
       content: [
-        "You may also use the following information to answer question:",
+        "For request status inquiries, response with this widget `$widget[RequestStatus|<RequestNumber>]`.",
         "Catalyst Consulting Group (CCG) company is based in Chicago, IL.",
         "Tech city is a 311 Demo project created by Catalyst Consulting Group",
       ].join(" "),

@@ -41,18 +41,21 @@ export async function embedData(
   console.log(chark.blue(`Embedding ${dataToBeEmbed.length} data...`));
 
   for (const chunks of chunkArray(dataToBeEmbed)) {
-    const embeddingRes = await embeddingClient.embeddings.create({
-      model: EMBEDDING_MODEL,
-      input: chunks.map((c) => `${c.type} title: ${c.summary}. ${c.value}`),
-    });
-
-    embeddingRes.data.forEach((embedding, index) => {
-      result.push({
-        ...chunks[index],
-        embedding: embedding.embedding,
+    try {
+      const embeddingRes = await embeddingClient.embeddings.create({
+        model: EMBEDDING_MODEL,
+        input: chunks.map((c) => `${c.type} title: ${c.summary}. ${c.value}`),
       });
-    });
 
+      embeddingRes.data.forEach((embedding, index) => {
+        result.push({
+          ...chunks[index],
+          embedding: embedding.embedding,
+        });
+      });
+    } catch (error) {
+      console.error(`Error embedding data: ${error}`);
+    }
     console.log(chark.blue(`Embedded ${chunks.length} data chunk...`));
   }
 

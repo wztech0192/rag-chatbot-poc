@@ -6,6 +6,7 @@ RAG queries:
 - i want to complaint about my neighbor
 - my neighbor's dog is very loud
 - i forgot to take out my garbage
+- i want to donate tree
 - the street is very dark
 - many street lights are out
 
