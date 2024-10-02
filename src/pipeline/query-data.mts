@@ -2,6 +2,7 @@ import {
   createDocLink,
   createInstructionMessages,
   createRequestStatusWidget,
+  RESPONSE_MARKUP_FORMAT,
 } from "../create-instructions.mjs";
 import { cosineSimilarity } from "../utils.mjs";
 import DataRepository from "../repo/DataRepository.mjs";
@@ -42,7 +43,7 @@ export async function queryData(
   const { query, mode = "rag", imageBase64 } = ctx;
 
   if (query.length > SEARCH_MAX_INPUT_CHARS) {
-    return {
+    return await generateResponse(ctx, {
       mode,
       isError: true,
       documents: [],
@@ -50,7 +51,7 @@ export async function queryData(
       query,
       response:
         "Your query is too long. Please try to be more concise and specific.",
-    };
+    });
   }
 
   try {
@@ -87,15 +88,15 @@ export async function queryData(
     console.error(err);
   }
 
-  return {
+  return await generateResponse(ctx, {
     mode,
     isError: true,
     documents: [],
     references: [],
     query,
-    response:
+    rawResponse:
       "Oops, we've encountered an unexpected issue. Please give it another shot later, or contact support if the problem persists.",
-  };
+  });
 }
 
 /**
@@ -150,13 +151,12 @@ async function createRagResponse(
       retrievedDocs,
     });
 
-    return {
+    return await generateResponse(ctx, {
       query,
-      response: result.choices[0].message.content,
+      rawResponse: result.choices[0].message.content ?? "",
       documents: retrievedDocs,
       mode: "rag",
-      references: await generateRefs(ctx, retrievedDocs),
-    };
+    });
   } catch (err) {
     console.error(err);
     return null;
@@ -183,15 +183,14 @@ async function createKeywordSearchResponse(
 
     // check if query is a 311 request number
     if (query.match(/^([0-9]{5,})$/)) {
-      return {
+      return await generateResponse(ctx, {
         query,
-        response:
-          "Request number detected. Here is the status of the request.\n" +
-          createRequestStatusWidget(query),
         documents: [],
         mode: "search",
-        references: [],
-      };
+        rawResponse:
+          "Request number detected. Here is the status of the request.\n" +
+          createRequestStatusWidget(query),
+      });
     }
 
     // try to perform keyword search first. If any result, then return the keyword search result
@@ -222,17 +221,16 @@ async function createKeywordSearchResponse(
       return null;
     }
 
-    return {
+    return await generateResponse(ctx, {
       query,
-      response:
+      documents: [],
+      mode: "search",
+      rawResponse:
         "Here is some relevant information matching your query keyword.\n" +
         keywordSearchResult
           .map((r) => createDocLink(r.type, r.id, r.title))
           .join("\n"),
-      documents: [],
-      mode: "search",
-      references: await generateRefs(ctx, keywordSearchResult),
-    };
+    });
   } catch (err) {
     console.error(err);
     return null;
@@ -273,17 +271,16 @@ async function createEmbeddingSearchResponse(
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, QUERY_TOP_N_RESULT);
 
-    return {
+    return await generateResponse(ctx, {
       query,
-      response:
+      documents: retrievedDocs,
+      mode: "search",
+      rawResponse:
         "Here is some relevant information based on your query\n" +
         retrievedDocs
           .map((r) => createDocLink(r.type, r.id, r.title))
           .join("\n"),
-      documents: retrievedDocs,
-      mode: "search",
-      references: await generateRefs(ctx, retrievedDocs),
-    };
+    });
   } catch (err) {
     console.error(err);
     return null;
@@ -331,31 +328,6 @@ async function populateQueryFromImage(ctx: RagQueryContext) {
   return imageRes;
 }
 
-async function generateRefs(
-  { dataRepo }: RagQueryContext,
-  retrievedDocs: RagRetrievedDoc[]
-) {
-  const chunkedData = await dataRepo.getChunkedDataAsync();
-
-  const existingDataMap = chunkedData.documents.reduce((acc, r) => {
-    acc[r.id] = {
-      id: r.id,
-      type: r.type,
-      title: r.title,
-      keywords: r.keywords,
-      description: r.description,
-      updatedAt: r.updatedAt,
-    };
-    return acc;
-  }, {} as Record<string, RagQueryReference>);
-
-  const refIds = new Set(retrievedDocs.map((d) => d.id));
-
-  return Array.from(refIds)
-    .map((id) => existingDataMap[id])
-    .filter(Boolean);
-}
-
 async function getRetrievedDocs({ query, dataRepo }: RagQueryContext) {
   const embeddedData = await dataRepo.getEmbeddedDataAsync();
 
@@ -386,5 +358,63 @@ async function getRetrievedDocs({ query, dataRepo }: RagQueryContext) {
   return {
     allRetrievedDocs,
     embeddedQueryRes,
+  };
+}
+
+async function generateResponse(
+  ctx: RagQueryContext,
+  data: Partial<RagQueryResponse>
+): Promise<RagQueryResponse> {
+  const rawResponse = data.rawResponse ?? "";
+
+  const matchRefs = rawResponse.matchAll(RESPONSE_MARKUP_FORMAT);
+  let existingDataMap: Record<string, RagQueryReference> | null = null;
+
+  const references: RagQueryReference[] = [];
+
+  for (const m of matchRefs) {
+    const refType = m.groups?.["type"] ?? "";
+    const values = m.groups?.["value"]?.split("|") ?? [];
+
+    if (refType === "link") {
+      const refId = values[1];
+
+      if (!existingDataMap) {
+        const chunkedData = await ctx.dataRepo.getChunkedDataAsync();
+
+        existingDataMap = chunkedData.documents.reduce((acc, r) => {
+          acc[r.id] = {
+            id: r.id,
+            type: r.type,
+            title: r.title,
+            keywords: r.keywords,
+            description: r.description,
+            updatedAt: r.updatedAt,
+          };
+          return acc;
+        }, {} as Record<string, RagQueryReference>);
+      }
+
+      const refData = existingDataMap[refId];
+      references.push(refData);
+    } else {
+      references.push({
+        id: values[0],
+        type: values[0],
+        value: values[1] === "<RequestNumber>" ? "" : values[1],
+      });
+    }
+  }
+
+  return {
+    documents: data.documents ?? [],
+    mode: data.mode ?? "rag",
+    isError: data.isError,
+    query: data.query ?? "",
+    rawResponse,
+    response: rawResponse
+      .replace(RESPONSE_MARKUP_FORMAT, "")
+      .replace("$\n+|\n^", ""),
+    references,
   };
 }

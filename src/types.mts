@@ -59,15 +59,17 @@ export interface RagRetrievedDoc extends RagEmbeddedChunk {
 
 export interface RagQueryReference {
   id: string;
-  type: RagDocType;
-  title: string;
+  type: string;
+  value?: string;
+  title?: string;
   keywords?: string;
   description?: string;
   updatedAt?: string;
 }
 
 export interface RagQueryResponse {
-  response?: string | null;
+  rawResponse: string;
+  response: string;
   query?: string | null;
   documents: RagRetrievedDoc[];
   references: RagQueryReference[];

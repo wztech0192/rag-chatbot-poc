@@ -3,8 +3,9 @@ import { RagEmbeddedChunk } from "./types.mjs";
 
 type RagRetrievedDoc = RagEmbeddedChunk & { similarity: number };
 
-const LINK_FORMAT = "$link[<Doc Type>|<Doc ID>|<Doc Summary>]";
-const WIDGET_FORMAT = "$widget[RequestStatus|<RequestNumber>]";
+export const RESPONSE_MARKUP_FORMAT = /\$(?<type>[^[]*)\[(?<value>[^\]]*)\]/g;
+export const LINK_FORMAT = "$link[<Doc Type>|<Doc ID>|<Doc Summary>]";
+export const WIDGET_FORMAT = "$widget[RequestStatus|<RequestNumber>]";
 
 export function createDocLink(
   docType: string,
@@ -34,6 +35,7 @@ export function createInstructionMessages(
         "For unrelated questions, inform the user that the information is unavailable.",
       ].join(" "),
     },
+
     // RAG instruction
     {
       role: "system",
@@ -50,11 +52,13 @@ export function createInstructionMessages(
           ]
       ).join(" "),
     },
+
     // Custom information
     {
       role: "system",
       content: [
-        `For request status inquiries, response with this widget \`${WIDGET_FORMAT}\` in the last line.`,
+        "\nUse the following information if neccesary:",
+        `If ask for the status of a existing service request, response at the end of responses in this format: \`${WIDGET_FORMAT}\`.`,
         "Catalyst Consulting Group (CCG) company is based in Chicago, IL.",
         "Tech city is a 311 Demo project created by Catalyst Consulting Group",
       ].join(" "),
@@ -80,7 +84,7 @@ const createRetrievedDocMessage = (retrievedDocs: RagRetrievedDoc[]) => {
       const ref = list[0];
 
       const docContent = [
-        `Retrieved Document ${i + 1}:`,
+        `Start Retrieved Document ${i + 1}`,
         `ID: ${ref.id}`,
         `Type: ${ref.type}`,
         `Summary: ${ref.title}`,
@@ -88,8 +92,10 @@ const createRetrievedDocMessage = (retrievedDocs: RagRetrievedDoc[]) => {
 
       const detail = list.map((r) => r.value).join("\n");
       if (ref.title !== detail) {
-        docContent.push(`Detail: \n${detail}`);
+        docContent.push(`Detail:\n${detail}`);
       }
+
+      docContent.push(`End Retrieved Document ${i + 1}`);
 
       return docContent.join("\n");
     })

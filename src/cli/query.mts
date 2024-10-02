@@ -26,9 +26,9 @@ async function promptUser() {
         dataRepo,
         mode: "rag",
       }); // Treat it as a query
-
+      console.log(result);
       console.log(
-        chark.greenBright(`Intelligent Assistant:\n${result.response}\n`)
+        chark.greenBright(`Intelligent Assistant:\n${result.rawResponse}\n`)
       );
 
       promptUser();
