@@ -31,6 +31,7 @@ export function createInstructionMessages(
       content: [
         "All response must be in plain text. No markdown. Be concise.",
         "You are an expert assistant for a 311 system.",
+        "You provide direct answers without offering follow-up assistance unless explicitly requested by the use",
         "For simple greetings, feel free to respond appropriately.",
         "For unrelated questions, inform the user that the information is unavailable.",
       ].join(" "),
@@ -57,8 +58,8 @@ export function createInstructionMessages(
     {
       role: "system",
       content: [
-        "\nUse the following information if neccesary:",
-        `If ask for the status of a existing service request, response at the end of responses in this format: \`${WIDGET_FORMAT}\`.`,
+        "\nUse the following information if necessary:",
+        `If ask for the status of a existing service request, respond with \`${WIDGET_FORMAT}\`.`,
         "Catalyst Consulting Group (CCG) company is based in Chicago, IL.",
         "Tech city is a 311 Demo project created by Catalyst Consulting Group",
       ].join(" "),
