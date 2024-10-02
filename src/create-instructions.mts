@@ -1,6 +1,25 @@
 import { ChatCompletionMessageParam } from "openai/resources/index";
 import { RagEmbeddedChunk } from "./types.mjs";
 
+type RagRetrievedDoc = RagEmbeddedChunk & { similarity: number };
+
+const LINK_FORMAT = "$link[<Doc Type>|<Doc ID>|<Doc Summary>]";
+const WIDGET_FORMAT = "$widget[RequestStatus|<RequestNumber>]";
+
+export function createDocLink(
+  docType: string,
+  docId: string,
+  docSummary: string
+) {
+  return LINK_FORMAT.replace("<Doc Type>", docType)
+    .replace("<Doc ID>", docId)
+    .replace("<Doc Summary>", docSummary);
+}
+
+export function createRequestStatusWidget(requestNumber: string) {
+  return WIDGET_FORMAT.replace("<RequestNumber>", requestNumber);
+}
+
 export function createInstructionMessages(
   retrievedDocs: RagRetrievedDoc[]
 ): ChatCompletionMessageParam[] {
@@ -22,7 +41,7 @@ export function createInstructionMessages(
         ? [
             "Answer questions strictly using information from retrieved documents.",
             "Do not provide information or suggestion not explicitly found in the retrieved documents.",
-            "Include retrieved document references at the end of responses in this format: `$link[<Doc Type>|<Doc ID>|<Doc Summary>]`. Each reference should have a new line without any other text.",
+            `Include retrieved document references at the end of responses in this format: \`${LINK_FORMAT}\`. Each reference should have a new line without any other text.`,
             "Always include the related Request type reference if applicable.\n",
             `Retrieved Documents:\n${createRetrievedDocMessage(retrievedDocs)}`,
           ]
@@ -35,7 +54,7 @@ export function createInstructionMessages(
     {
       role: "system",
       content: [
-        "For request status inquiries, response with this widget `$widget[RequestStatus|<RequestNumber>]`.",
+        `For request status inquiries, response with this widget \`${WIDGET_FORMAT}\` in the last line.`,
         "Catalyst Consulting Group (CCG) company is based in Chicago, IL.",
         "Tech city is a 311 Demo project created by Catalyst Consulting Group",
       ].join(" "),
@@ -78,5 +97,3 @@ const createRetrievedDocMessage = (retrievedDocs: RagRetrievedDoc[]) => {
 
   return retrievedDocsContent;
 };
-
-type RagRetrievedDoc = RagEmbeddedChunk & { similarity: number };

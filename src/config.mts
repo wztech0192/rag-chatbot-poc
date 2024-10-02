@@ -23,6 +23,8 @@ export const QUERY_TOP_N_RESULT =
 export const QUERY_TOP_N_REQUEST_RESULT =
   parseInt(process.env.IA_QUERY_TOP_N_REQUEST_RESULT ?? "") || 3;
 
+export const FORCE_QUERY_MODE = process.env.IA_FORCE_QUERY_MODE;
+
 export const S3_BUCKET = process.env.IA_S3_BUCKET;
 export const S3_REGION = process.env.IA_S3_REGION;
 export const S3_ENDPOINT = process.env.IA_S3_ENDPOINT;

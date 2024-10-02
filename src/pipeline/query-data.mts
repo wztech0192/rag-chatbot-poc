@@ -1,9 +1,14 @@
-import { createInstructionMessages } from "../create-instructions.mjs";
+import {
+  createDocLink,
+  createInstructionMessages,
+  createRequestStatusWidget,
+} from "../create-instructions.mjs";
 import { cosineSimilarity } from "../utils.mjs";
 import DataRepository from "../repo/DataRepository.mjs";
 import {
   EMBEDDING_MODEL,
   embeddingClient,
+  FORCE_QUERY_MODE,
   LLM_MODEL,
   llmClient,
   QUERY_TOP_N_REQUEST_RESULT,
@@ -30,6 +35,10 @@ export type RagQueryContext = {
 export async function queryData(
   ctx: RagQueryContext
 ): Promise<RagQueryResponse> {
+  if (FORCE_QUERY_MODE) {
+    ctx.mode = FORCE_QUERY_MODE as RagQueryMode;
+  }
+
   const { query, mode = "rag", imageBase64 } = ctx;
 
   if (query.length > SEARCH_MAX_INPUT_CHARS) {
@@ -51,6 +60,14 @@ export async function queryData(
 
     let isFallback = false;
 
+    const keywordResult = await createKeywordSearchResponse(ctx);
+
+    // perform keyword search first, if no result, then perform other search
+
+    if (keywordResult) {
+      return keywordResult;
+    }
+
     if (mode === "rag") {
       const ragRes = await createRagResponse(ctx);
       if (ragRes !== null) {
@@ -61,10 +78,7 @@ export async function queryData(
     }
 
     if (isFallback || mode === "search") {
-      const searchRes =
-        // perform keyword search first, if no result, then perform vector embedding search
-        (await createKeywordSearchResponse(ctx)) ??
-        (await createEmbeddingSearchResponse(ctx));
+      const searchRes = await createEmbeddingSearchResponse(ctx);
       if (searchRes !== null) {
         return searchRes;
       }
@@ -162,6 +176,24 @@ async function createKeywordSearchResponse(
 
     const loweredQuery = query.toLowerCase();
 
+    // ignore "hi"... why not?
+    if (loweredQuery === "hi") {
+      return null;
+    }
+
+    // check if query is a 311 request number
+    if (query.match(/^([0-9]{5,})$/)) {
+      return {
+        query,
+        response:
+          "Request number detected. Here is the status of the request.\n" +
+          createRequestStatusWidget(query),
+        documents: [],
+        mode: "search",
+        references: [],
+      };
+    }
+
     // try to perform keyword search first. If any result, then return the keyword search result
     const keywordSearchResult: RagRetrievedDoc[] = chunkedData.documents
       .filter(
@@ -184,7 +216,7 @@ async function createKeywordSearchResponse(
             embedding: [],
           } as RagRetrievedDoc)
       )
-      .slice(0, QUERY_TOP_N_RESULT);
+      .slice(0, QUERY_TOP_N_RESULT * 2);
 
     if (!keywordSearchResult.length) {
       return null;
@@ -192,7 +224,11 @@ async function createKeywordSearchResponse(
 
     return {
       query,
-      response: "Here is some relevant information for your query.",
+      response:
+        "Here is some relevant information matching your query keyword.\n" +
+        keywordSearchResult
+          .map((r) => createDocLink(r.type, r.id, r.title))
+          .join("\n"),
       documents: [],
       mode: "search",
       references: await generateRefs(ctx, keywordSearchResult),
@@ -239,7 +275,11 @@ async function createEmbeddingSearchResponse(
 
     return {
       query,
-      response: "Here is some relevant information based on your query",
+      response:
+        "Here is some relevant information based on your query\n" +
+        retrievedDocs
+          .map((r) => createDocLink(r.type, r.id, r.title))
+          .join("\n"),
       documents: retrievedDocs,
       mode: "search",
       references: await generateRefs(ctx, retrievedDocs),
