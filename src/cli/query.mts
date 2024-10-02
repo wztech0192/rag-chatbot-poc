@@ -21,19 +21,16 @@ async function promptUser() {
       console.log(chark.green("Exiting..."));
       rl.close(); // Close the input stream and exit
     } else {
-      const result = await queryData(inputArg, dataRepo); // Treat it as a query
+      const result = await queryData({
+        query: inputArg,
+        dataRepo,
+        mode: "rag",
+      }); // Treat it as a query
 
-      if (!result) {
-        console.log(
-          chark.red("No processed data found. Please process data first.")
-        );
-      } else {
-        console.log(
-          chark.greenBright(
-            `Intelligent Assistant:\n${result.choices[0].message.content}\n`
-          )
-        );
-      }
+      console.log(
+        chark.greenBright(`Intelligent Assistant:\n${result.response}\n`)
+      );
+
       promptUser();
     }
   });

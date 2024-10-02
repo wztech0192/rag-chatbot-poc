@@ -22,7 +22,7 @@ export function createInstructionMessages(
         ? [
             "Answer questions strictly using information from retrieved documents.",
             "Do not provide information or suggestion not explicitly found in the retrieved documents.",
-            "Include retrieved document references at the end of responses in this format as list: `$link[<TYPE>|<ID>|<SUMMARY>]`.",
+            "Include retrieved document references at the end of responses in this format: `$link[<Doc Type>|<Doc ID>|<Doc Summary>]`. Each reference should have a new line without any other text.",
             "Always include the related Request type reference if applicable.\n",
             `Retrieved Documents:\n${createRetrievedDocMessage(retrievedDocs)}`,
           ]
@@ -64,11 +64,11 @@ const createRetrievedDocMessage = (retrievedDocs: RagRetrievedDoc[]) => {
         `Retrieved Document ${i + 1}:`,
         `ID: ${ref.id}`,
         `Type: ${ref.type}`,
-        `Summary: ${ref.summary}`,
+        `Summary: ${ref.title}`,
       ];
 
       const detail = list.map((r) => r.value).join("\n");
-      if (ref.summary !== detail) {
+      if (ref.title !== detail) {
         docContent.push(`Detail: \n${detail}`);
       }
 

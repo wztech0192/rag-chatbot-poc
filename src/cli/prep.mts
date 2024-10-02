@@ -10,11 +10,16 @@ try {
 
   const chunkedData = await dataRepo.getChunkedDataAsync();
 
-  const fetchedData = await gatherData(chunkedData);
+  const gatherDataResult = await gatherData(chunkedData);
 
-  const newChunkedData = await chunkData(fetchedData);
+  if (gatherDataResult.isUpdated) {
+    const chunkDataResult = await chunkData(gatherDataResult.data);
 
-  await dataRepo.saveChunkedDataAsync(newChunkedData);
+    if (chunkDataResult.isUpdated) {
+      console.log(chark.green("Saving data..."));
+      await dataRepo.saveChunkedDataAsync(chunkDataResult.data);
+    }
+  }
 
   console.log(chark.green("Completed data preparation..."));
 } catch (err) {

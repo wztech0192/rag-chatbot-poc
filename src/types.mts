@@ -1,3 +1,12 @@
+export type RagDocType = "Request" | "Article";
+
+export type RagQueryMode = "rag" | "search";
+
+export type IsUpdatedResponse<T> = {
+  data: T;
+  isUpdated: boolean;
+};
+
 export interface RagChunkedData {
   source: string;
   documents: RagDocument[];
@@ -6,11 +15,12 @@ export interface RagChunkedData {
 
 export interface RagDocument {
   id: string;
-  type: string;
-  summary: string;
-  keywords: string;
-  content: string;
-  updatedAt: string;
+  type: RagDocType;
+  title: string;
+  keywords?: string;
+  description?: string;
+  content?: string;
+  updatedAt?: string;
   chunks: RagChunkItem[] | null;
 }
 
@@ -27,8 +37,8 @@ export interface RagEmbeddedData {
 
 export interface RagEmbeddedChunk {
   id: string;
-  type: string;
-  summary: string;
+  type: RagDocType;
+  title: string;
   value: string;
   hash: string;
   embedding: number[];
@@ -36,18 +46,31 @@ export interface RagEmbeddedChunk {
 
 export interface RagQueryResult {
   query: string;
-  embeddingResponse: any;
-  llmResponse: any;
-  messages: any;
-  retrievedDocs: RagRetrievedDoc[];
-  retrievedRequestDocs: RagRetrievedDoc[];
+  embeddingResponse?: any;
+  llmResponse?: any;
+  messages?: any;
+  retrievedDocs?: RagRetrievedDoc[];
 }
 
-export interface RagRetrievedDoc {
-  id: string;
-  type: string;
+export interface RagRetrievedDoc extends RagEmbeddedChunk {
   similarity: number;
-  summary: string;
-  value: string;
-  hash: string;
+  matchType: "keyword" | "embedding";
+}
+
+export interface RagQueryReference {
+  id: string;
+  type: RagDocType;
+  title: string;
+  keywords?: string;
+  description?: string;
+  updatedAt?: string;
+}
+
+export interface RagQueryResponse {
+  response?: string | null;
+  query?: string | null;
+  documents: RagRetrievedDoc[];
+  references: RagQueryReference[];
+  mode: RagQueryMode;
+  isError?: boolean;
 }

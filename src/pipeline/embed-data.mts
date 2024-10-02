@@ -1,4 +1,5 @@
 import {
+  IsUpdatedResponse,
   RagChunkedData,
   RagEmbeddedChunk,
   RagEmbeddedData,
@@ -11,7 +12,8 @@ import { chunkArray } from "../utils.mjs";
 export async function embedData(
   chunkedData: RagChunkedData,
   embeddedData: RagEmbeddedData
-): Promise<RagEmbeddedData> {
+): Promise<IsUpdatedResponse<RagEmbeddedData>> {
+  let isUpdated = false;
   console.log(chark.green("Embedding process started..."));
 
   const existingEmbeddedDataMap = embeddedData.data.reduce((acc, d) => {
@@ -27,11 +29,12 @@ export async function embedData(
       if (existingEmbeddedDataMap[chunkData.hash]) {
         result.push(existingEmbeddedDataMap[chunkData.hash]);
       } else {
+        isUpdated = true;
         console.log(chark.blue(`Prepare ${chunkData.hash} for embedding...`));
         dataToBeEmbed.push({
           id: doc.id,
           type: doc.type,
-          summary: doc.summary,
+          title: doc.title,
           ...chunkData,
         });
       }
@@ -44,7 +47,7 @@ export async function embedData(
     try {
       const embeddingRes = await embeddingClient.embeddings.create({
         model: EMBEDDING_MODEL,
-        input: chunks.map((c) => `${c.type} title: ${c.summary}. ${c.value}`),
+        input: chunks.map((c) => `${c.type} title: ${c.title}. ${c.value}`),
       });
 
       embeddingRes.data.forEach((embedding, index) => {
@@ -62,8 +65,11 @@ export async function embedData(
   console.log(chark.green(`Embedding data completed`));
 
   return {
-    model: EMBEDDING_MODEL,
-    timestamp: new Date().toISOString(),
-    data: result,
+    data: {
+      model: EMBEDDING_MODEL,
+      timestamp: new Date().toISOString(),
+      data: result,
+    },
+    isUpdated,
   };
 }

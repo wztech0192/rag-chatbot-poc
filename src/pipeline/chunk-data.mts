@@ -1,11 +1,13 @@
 import chark from "chalk";
 import { htmlToText } from "html-to-text";
 import { sha256inb64 } from "../utils.mjs";
-import { RagChunkedData, RagDocument } from "../types.mjs";
+import { IsUpdatedResponse, RagChunkedData, RagDocument } from "../types.mjs";
 
 export async function chunkData(
   chunkedData: RagChunkedData
-): Promise<RagChunkedData> {
+): Promise<IsUpdatedResponse<RagChunkedData>> {
+  let isUpdated = false;
+
   console.log(chark.green("Chunking data started..."));
 
   const result: RagDocument[] = [];
@@ -18,12 +20,14 @@ export async function chunkData(
         for (const chunk of chunkBySentencesAndCharacters(data.content)) {
           data.chunks.push({
             value: chunk,
-            hash: sha256inb64(data.id + data.summary + chunk),
+            hash: sha256inb64(data.id + data.title + chunk),
           });
         }
       }
 
       console.log(chark.blue(`Chunked "${data.id}"...`));
+
+      isUpdated = true;
     }
 
     result.push(data);
@@ -32,8 +36,11 @@ export async function chunkData(
   console.log(chark.green(`Chunking data completed`));
 
   return {
-    ...chunkedData,
-    documents: result,
+    data: {
+      ...chunkedData,
+      documents: result,
+    },
+    isUpdated,
   };
 }
 
@@ -52,6 +59,7 @@ function chunkBySentencesAndCharacters(
   minCharacters = 50
 ): string[] {
   const sentences = splitIntoSentences(convertHtmlToPlainText(rawText));
+
   const chunks: string[] = [];
   let currentChunk = "";
   let currentSentencesCount = 0;
@@ -77,7 +85,7 @@ function chunkBySentencesAndCharacters(
     currentCharactersCount += sentenceLength;
   }
 
-  if (currentChunk.trim().length >= minCharacters) {
+  if (currentChunk.trim()) {
     chunks.push(currentChunk.trim());
   }
 

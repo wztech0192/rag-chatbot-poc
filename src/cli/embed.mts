@@ -7,6 +7,8 @@ const chunkedData = await dataRepo.getChunkedDataAsync();
 
 const embeddedData = await dataRepo.getEmbeddedDataAsync();
 
-const newEmbeddedData = await embedData(chunkedData, embeddedData);
+const embedDataResult = await embedData(chunkedData, embeddedData);
 
-await dataRepo.saveEmbeddedDataAsync(newEmbeddedData);
+if (embedDataResult.isUpdated) {
+  await dataRepo.saveEmbeddedDataAsync(embedDataResult.data);
+}

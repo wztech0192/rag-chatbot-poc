@@ -1,5 +1,5 @@
 import chark from "chalk";
-import { RagChunkedData, RagDocument } from "../types.mjs";
+import { IsUpdatedResponse, RagChunkedData, RagDocument } from "../types.mjs";
 import {
   ARTICLE_DETAIL_PATH,
   ARTICLE_METADATA_PATH,
@@ -12,9 +12,30 @@ const FETCH_ARTICLE_HEADERS = {
   visibility: "public",
 };
 
+interface RequestType {
+  requestTypeSearchName: string;
+  requestTypeName: string;
+  requestTypeKeywords: string; // separated by ;
+  requestTypeId: string;
+  description: string;
+}
+
+interface ArticleType {
+  title: string;
+  description: string;
+  keywords?: string;
+  lastModifiedDate?: string;
+  articleVisibility?: string;
+  articleVersionid?: string;
+  articleNumber?: string;
+  publicationStatus?: string;
+  articleType?: string;
+  knowledgeArticleId: string;
+}
+
 export async function gatherData(
   chunkedData: RagChunkedData
-): Promise<RagChunkedData> {
+): Promise<IsUpdatedResponse<RagChunkedData>> {
   const existingDataMap = chunkedData.documents.reduce((acc, r) => {
     acc[r.id] = r;
     return acc;
@@ -22,9 +43,11 @@ export async function gatherData(
 
   console.log(chark.green("Gathering resource data started..."));
 
-  const articles = await fetchArticles(existingDataMap);
+  const { result: articles, isUpdated: isArticlesUpdated } =
+    await fetchArticles(existingDataMap);
 
-  const requests = await fetchRequests(existingDataMap);
+  const { result: requests, isUpdated: isRequestsUpdated } =
+    await fetchRequests(existingDataMap);
 
   const documents = requests.concat(articles);
 
@@ -33,17 +56,21 @@ export async function gatherData(
   );
 
   return {
-    source: SF_BASE_URL,
-    timestamp: new Date().toISOString(),
-    documents,
+    data: {
+      source: SF_BASE_URL,
+      timestamp: new Date().toISOString(),
+      documents,
+    },
+    isUpdated: isArticlesUpdated || isRequestsUpdated,
   };
 }
 
 async function fetchRequests(resourceDataMap: Record<string, RagDocument>) {
+  let isUpdated = false;
   console.log(chark.blue(`Fetching request metadata...`));
 
   const res = await fetch(new URL(REQUEST_METADATA_PATH, SF_BASE_URL));
-  const requestTypes = (await res.json()).data;
+  const requestTypes: RequestType[] = (await res.json()).data;
 
   const result: RagDocument[] = [];
 
@@ -51,19 +78,21 @@ async function fetchRequests(resourceDataMap: Record<string, RagDocument>) {
     const existingRt = resourceDataMap[rt.requestTypeId];
     const reuseChunks =
       !existingRt ||
-      existingRt.summary !== rt.requestTypeName ||
+      existingRt.title !== rt.requestTypeName ||
       existingRt.content !== rt.description
         ? null
         : existingRt.chunks;
 
     if (!reuseChunks) {
       console.log(chark.blue(`Upsert ${rt.requestTypeId}...`));
+      isUpdated = true;
     }
 
     result.push({
       id: rt.requestTypeId,
       type: "Request",
-      summary: rt.requestTypeName,
+      title: rt.requestTypeName,
+      description: rt.description,
       content: rt.description,
       keywords: rt.requestTypeKeywords,
       updatedAt: new Date().toISOString(),
@@ -73,10 +102,14 @@ async function fetchRequests(resourceDataMap: Record<string, RagDocument>) {
 
   console.log(chark.blue(`Fetched ${result.length} metadata...`));
 
-  return result;
+  return {
+    result,
+    isUpdated,
+  };
 }
 
 async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
+  let isUpdated = false;
   console.log(chark.blue(`Fetching article metadata...`));
   const articleData: RagDocument[] = [];
 
@@ -84,7 +117,7 @@ async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
     headers: FETCH_ARTICLE_HEADERS,
   });
 
-  const articleTypes = (await res.json()).data;
+  const articleTypes: ArticleType[] = (await res.json()).data;
   console.log(chark.blue(`Fetched ${articleTypes.length} article metadata...`));
 
   for (const articleType of articleTypes) {
@@ -120,7 +153,8 @@ async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
         articleData.push({
           id: articleType.knowledgeArticleId,
           type: "Article",
-          summary: articleType.title,
+          title: articleType.title,
+          description: articleType.description,
           content: articleDetail.data.articleContent || articleType.description,
           updatedAt: articleType.lastModifiedDate,
           keywords: articleType.keywords,
@@ -131,6 +165,7 @@ async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
             `Upsert ${articleType.knowledgeArticleId} article detail...`
           )
         );
+        isUpdated = true;
       }
     } catch (err) {
       console.error(err);
@@ -142,5 +177,5 @@ async function fetchArticles(resourceDataMap: Record<string, RagDocument>) {
     }
   }
 
-  return articleData;
+  return { result: articleData, isUpdated };
 }

@@ -1,8 +1,18 @@
+import { EMBEDDING_MODEL, SF_BASE_URL } from "../config.mjs";
 import { RagChunkedData, RagEmbeddedData, RagQueryResult } from "../types.mjs";
+import { sha256inb64 } from "../utils.mjs";
 
 export default class DataRepository {
   chunkedData: RagChunkedData | null = null;
   embeddedData: RagEmbeddedData | null = null;
+  readonly _chunkedDataFileKey: string;
+  readonly _embeddedDataFileKey: string;
+
+  constructor() {
+    const sourceHash = sha256inb64(SF_BASE_URL, 6);
+    this._chunkedDataFileKey = `${sourceHash}/chunked-data.json`;
+    this._embeddedDataFileKey = `${sourceHash}/embedded-data-${EMBEDDING_MODEL}.json`;
+  }
 
   async readChunkedDataAsync(): Promise<RagChunkedData> {
     throw new Error("Not implemented");

@@ -45,7 +45,7 @@ The project includes the following CLI commands:
 
 1. **Data Processing:** The `chunk-data` script splits large datasets into smaller chunks for efficient handling.
 2. **Embedding Data:** The `embed-data` script converts the chunked data into vector embeddings using OpenAI's embedding model.
-3. **Querying:** The chatbot, started with the `start` script, leverages both the embeddings and OpenAI models to provide relevant answers based on the user's queries.
+3. **Querying:** The chatbot, powered by the `query-data` script, leverages both the embeddings and OpenAI models to provide relevant answers based on the user's queries.
 
 ## Example CLI commands
 

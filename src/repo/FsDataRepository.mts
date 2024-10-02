@@ -1,7 +1,5 @@
 import fs from "fs";
 import DataRepository from "./DataRepository.mjs";
-import { EMBEDDING_MODEL, SF_BASE_URL } from "../config.mjs";
-import { sha256inb64 } from "../utils.mjs";
 import { RagChunkedData, RagEmbeddedData, RagQueryResult } from "../types.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -14,9 +12,8 @@ export default class FsDataRepository extends DataRepository {
   constructor() {
     super();
 
-    const sourceHash = sha256inb64(SF_BASE_URL, 6);
-    this.CHUNKED_DATA_PATH = `../../storage/${sourceHash}/chunked-data.json`;
-    this.EMBEDDED_DATA_PATH = `../../storage/${sourceHash}/embedded-data-${EMBEDDING_MODEL}.json`;
+    this.CHUNKED_DATA_PATH = `../../storage/${this._chunkedDataFileKey}`;
+    this.EMBEDDED_DATA_PATH = `../../storage/${this._embeddedDataFileKey}`;
     this.QUERY_RESULT_PATH = "../../query-results";
   }
 
@@ -26,6 +23,7 @@ export default class FsDataRepository extends DataRepository {
   }
 
   async saveChunkedDataAsync(newChunkedData: RagChunkedData) {
+    newChunkedData.timestamp = new Date().toISOString();
     await this.writeToFile(
       this.CHUNKED_DATA_PATH,
       JSON.stringify(newChunkedData, null, 2)
@@ -39,9 +37,10 @@ export default class FsDataRepository extends DataRepository {
   }
 
   async saveEmbeddedDataAsync(newEmbeddedData: RagEmbeddedData) {
+    newEmbeddedData.timestamp = new Date().toISOString();
     await this.writeToFile(
       this.EMBEDDED_DATA_PATH,
-      JSON.stringify(newEmbeddedData, null, 2)
+      JSON.stringify(newEmbeddedData)
     );
     this.embeddedData = newEmbeddedData;
   }
