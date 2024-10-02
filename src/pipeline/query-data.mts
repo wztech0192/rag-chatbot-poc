@@ -414,7 +414,7 @@ async function generateResponse(
     rawResponse,
     response: rawResponse
       .replace(RESPONSE_MARKUP_FORMAT, "")
-      .replace("$\n+|\n^", ""),
+      .replace(/^\s+|\s+$/g, ""),
     references,
   };
 }
